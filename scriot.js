@@ -1,5 +1,11 @@
-let faceModel;
-let blazeface;
+function detectScreenOff() {
+  Android.warnUser();
+}
+
+// JavaScript function to call Android function to send email
+function sendEmail(email, message) {
+  Android.sendEmail(email, message);
+}
 
 // Function called when the page is fully loaded
 function onPageLoaded() {
@@ -29,10 +35,4 @@ function detectFaceAndSendEmail() {
   //   const faceDetectionResult = 'Secret face detected!';
   //   sendEmail(email, faceDetectionResult);
   // }
-}
-
-// Function to detect screen off
-function detectScreenOff() {
-  // Call Android function to detect screen off
-  Android.screenOffDetected();
 }
