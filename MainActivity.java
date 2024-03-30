@@ -1,3 +1,8 @@
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
@@ -10,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     private WebView webView;
+    private BroadcastReceiver screenOffReceiver;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,38 @@ public class MainActivity extends AppCompatActivity {
                 webView.loadUrl("javascript:onPageLoaded()");
             }
         });
+
+        // Register screen off receiver
+        registerScreenOffReceiver();
+
+        // Initialize media player
+        mediaPlayer = MediaPlayer.create(this, R.raw.warning_sound);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister screen off receiver
+        unregisterScreenOffReceiver();
+    }
+
+    private void registerScreenOffReceiver() {
+        screenOffReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Screen off detected, notify JavaScript
+                webView.loadUrl("javascript:detectScreenOff()");
+            }
+        };
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(screenOffReceiver, filter);
+    }
+
+    private void unregisterScreenOffReceiver() {
+        if (screenOffReceiver != null) {
+            unregisterReceiver(screenOffReceiver);
+            screenOffReceiver = null;
+        }
     }
 
     public class WebAppInterface {
@@ -44,11 +83,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @JavascriptInterface
-        public void screenOffDetected() {
-            // Implement screen off detection functionality here
+        public void warnUser() {
+            // Play warning sound
+            if (mediaPlayer != null) {
+                mediaPlayer.start();
+            }
+            // Implement any other warning mechanisms here
             // Example:
-            // Toast.makeText(MainActivity.this, "Screen off detected", Toast.LENGTH_SHORT).show();
-            System.out.println("Screen off detected");
+            // Toast.makeText(MainActivity.this, "Unauthorized access detected!", Toast.LENGTH_SHORT).show();
+            System.out.println("Unauthorized access detected!");
         }
     }
 }
