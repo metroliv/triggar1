@@ -1,0 +1,27 @@
+#phoneWindow {
+  width: 300px;
+  height: 500px;
+  border: 2px solid black;
+  padding: 20px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+#unlockButton {
+  padding: 10px 20px;
+  margin-bottom: 20px;
+}
+
+#faceDetection {
+  margin-bottom: 20px;
+}
+
+#emailInput {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#sendEmailButton {
+  padding: 10px 20px;
+}
